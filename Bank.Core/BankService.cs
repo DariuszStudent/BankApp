@@ -16,11 +16,11 @@ namespace Bank.Core
             var admin = new Account(0, "admin", "admin", "admin", "1234", 0);
             admin.AdminFlag = true;
             Accounts.Add(admin);
-            var user1 = new Account(1, "Bożena", "Babcia", "babcia", "1234", 500);
+            var user1 = new Account(1, "Bożena", "Babcia", "babcia", "1234", 0);
             Accounts.Add(user1);
             PayOnAccount(user1, 1000);
             PayOnAccount(user1, 500);
-            var user2 = new Account(2, "Sławomir", "Dziadek", "dziadek", "1234", 450);
+            var user2 = new Account(2, "Sławomir", "Dziadek", "dziadek", "1234", 0);
             Accounts.Add(user2);
             PayOnAccount(user2, 200);
             PayOnAccount(user2, 5000);

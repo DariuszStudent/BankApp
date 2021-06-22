@@ -17,7 +17,7 @@ namespace Bank.Core
         public List<DataAccount> DataAccount { get; set; }
 
         public Account(int id, string firstName, string lastName, string login, string password, decimal accountBalance,
-            bool accountBlock = false ,bool creditFlag = false, bool adminFlag = false, decimal CreditBalance = 10)
+            bool accountBlock = false ,bool creditFlag = false, bool adminFlag = false, decimal CreditBalance)
         {
             Id = id;
             FirstName = firstName;
