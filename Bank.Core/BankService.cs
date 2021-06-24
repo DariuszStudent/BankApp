@@ -39,6 +39,8 @@ namespace Bank.Core
             return Accounts.FirstOrDefault(x => x == account).AdminFlag;
         }
 
+        // -------------------------------------------------------------------------------------------------ADMIN
+
         public bool BlockAccount(int id)
         {
             return Accounts.FirstOrDefault(x => x.Id == id).AccountBlockFlag = true;
@@ -75,6 +77,65 @@ namespace Bank.Core
             return true;
         }
 
+        public List<string> CustomerCreditHistory(int idUser)
+        {
+            var listUsers = new List<string>();
+
+            for (int i = 0; i < Accounts.Count; i++)
+            {
+                if (Accounts[i].Id == idUser)
+                {
+                    for (int j = 0; j < Accounts[i].DataAccount.Count; j++)
+                    {
+                        if (Accounts[i].DataAccount[j].BringCredit > 0)
+                            listUsers.Add($"Dnia: {Helpers.DateInPolish(Accounts[i].DataAccount[j].Data)} |" +
+                                $"Użytkownik: {Accounts[i].LastName}, wziął kredyt na: {Accounts[i].DataAccount[j].BringCredit} zł.");
+                        if (Accounts[i].DataAccount[j].PayOffCredit > 0)
+                            listUsers.Add($"Dnia: {Helpers.DateInPolish(Accounts[i].DataAccount[j].Data)} |" +
+                                $"Użytkownik: {Accounts[i].LastName}, dał na kredyt: {Accounts[i].DataAccount[j].PayOffCredit} zł.");
+                        else if (Accounts[i].DataAccount[j].RepaidLoan)
+                                    listUsers.Add($"Dnia: {Helpers.DateInPolish(Accounts[i].DataAccount[j].Data)} |" +
+                                        $"Użytkownik: {Accounts[i].LastName}, spłacił cały kredyt.");
+                    }
+                }
+            }
+
+            return listUsers;
+        }
+
+        public decimal TotalCredit()
+        {
+            var result = 0M;
+            for (int i = 0; i < Accounts.Count; i++)
+            {
+                result += Accounts[i].CreditBalance;
+            }
+            return result;
+        }
+
+        public decimal AmountOfMoneyInTheBank()
+        {
+            var result = 0M;
+            for (int i = 0; i < Accounts.Count; i++)
+            {
+                result += Accounts[i].AccountBalance;
+            }
+            return result;
+        }
+
+        public List<string> ListOfDebtors()
+        {
+            var users = new List<string>();
+
+            for (var i = 1; i < Accounts.Count; i++)
+            {
+                if (Accounts[i].CreditBalance > 0) users.Add($"{Accounts[i].Id}. | {Accounts[i].FirstName} {Accounts[i].LastName} " +
+                                                        $"| Stan konta: {Accounts[i].AccountBalance}zł. " +
+                                                        $"| Stan kredytu: {Accounts[i].CreditBalance}zł.");
+            }
+            return users;
+        }
+
         public bool RemoveAccount(int id)
         {
             var result = false;
@@ -104,9 +165,11 @@ namespace Bank.Core
             return listString;
         }
 
+        // ------------------------------------------------------------------------------------------------USERS
+
         public void PayOnAccount(Account account, decimal payOn)
         {
-            var dataAccount = new DataAccount(CheckIdData(), payOn, 0);
+            var dataAccount = new DataAccount(CheckIdData(), payOn, 0, 0, 0);
 
             for (int i = 0; i < Accounts.Count; i++)
             {
@@ -141,7 +204,7 @@ namespace Bank.Core
 
         public void PayOffAccount(Account account, decimal payOff)
         {
-            var dataAccount = new DataAccount(CheckIdData(), 0, payOff);
+            var dataAccount = new DataAccount(CheckIdData(), 0, payOff, 0, 0);
 
             for (int i = 0; i < Accounts.Count; i++)
             {
@@ -191,6 +254,7 @@ namespace Bank.Core
                     Accounts[i].CreditFlag = true;
                     Accounts[i].CreditBalance = credit;
                     Accounts[i].AccountBalance += credit;
+                    Accounts[i].DataAccount.Add(new DataAccount(CheckIdData(), 0, 0, credit, 0));
                     return true;
                 }
             }
@@ -205,8 +269,7 @@ namespace Bank.Core
             for (int i = 0; i < Accounts.Count; i++)
             {
                 if (Accounts[i].Id == userToTransfer)
-                {
-                    
+                {                    
                     Accounts[i].AccountBalance += payOn;
                     transferOk = true;
                 }
@@ -227,7 +290,12 @@ namespace Bank.Core
                 {
                     Accounts[i].CreditBalance -= payOn;
                     Accounts[i].AccountBalance -= payOn;
-                    if (Accounts[i].CreditBalance == 0) Accounts[i].CreditFlag = false;
+                    Accounts[i].DataAccount.Add(new DataAccount(CheckIdData(), 0, 0, 0, payOn));
+                    if (Accounts[i].CreditBalance == 0)
+                    {
+                        Accounts[i].CreditFlag = false;
+                        Accounts[i].DataAccount.Add(new DataAccount(CheckIdData(), 0, 0, 0, 0, true));
+                    }
                 }
                 
             }

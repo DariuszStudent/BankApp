@@ -31,6 +31,7 @@ namespace Bank
                             case "1":
                                 bankApp.ShowAllAccounts();
                                 bankApp.BlockAccount();
+                                Console.ReadKey();
                                 break;
                             case "2":
                                 bankApp.AddNewAccount();
@@ -38,18 +39,23 @@ namespace Bank
                             case "3":
                                 bankApp.ShowAllAccounts();
                                 bankApp.RemoveAccount();
+                                Console.ReadKey();
                                 break;
                             case "4":
-
+                                bankApp.AmountOfMoneyInTheBank();
+                                Console.ReadKey();
                                 break;
                             case "5":
-
+                                bankApp.TotalCredit();
+                                Console.ReadKey();
                                 break;
                             case "6":
-
+                                bankApp.CustomerCreditHistory();
+                                Console.ReadKey();
                                 break;
                             case "7":
-
+                                bankApp.ListOfDebtors();
+                                Console.ReadKey();
                                 break;
                             case "8":
                                 bankApp.AboutUsers();

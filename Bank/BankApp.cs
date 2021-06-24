@@ -42,7 +42,6 @@ namespace Bank
             if (result) Console.WriteLine("Użytkownik o ID: " + id + 
                 ". został zablokowany.");
             else Console.WriteLine("Operacja nie udana.");
-            Console.ReadKey();
         }
         
         public void AddNewAccount()
@@ -76,6 +75,40 @@ namespace Bank
             bankService.AddNewAccount(id, firstName, lastName, login, password, accountBalance);
         }
 
+        public void CustomerCreditHistory()
+        {
+            Console.WriteLine("Wybierz którego użytkownika chcesz sprawdzić: ");
+            ShowAllAccounts();
+            var userInput = Helpers.JustInts();
+            Console.WriteLine("Oto historia wybranego użytkownika: ");
+            foreach (var item in bankService.CustomerCreditHistory(userInput))
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        public void ListOfDebtors()
+        {   
+            Console.WriteLine("Lista dłużników na dzień dzisiejszy: " + Helpers.DateInPolish(DateTime.Now));
+
+            foreach (var item in bankService.ListOfDebtors())
+            {
+                Console.WriteLine(item);
+            }
+        }
+
+        public void TotalCredit()
+        {
+            Console.WriteLine("Łączna wartość przyznanych kredytów:");
+            Console.WriteLine(bankService.TotalCredit() + "zł.");
+        }
+
+        public void AmountOfMoneyInTheBank()
+        {
+            Console.WriteLine("Suma pięniędzy w banku na dzień dzisiejszy: ");
+            Console.WriteLine(bankService.AmountOfMoneyInTheBank() + "zł.");
+        }
+
         public void AboutUsers()
         {
             var listString = bankService.AboutUsers();
@@ -97,7 +130,6 @@ namespace Bank
                 Console.WriteLine("Udało się usunąć użytkownika.");
             }
             else Console.WriteLine("Nie udało się usunąć użytkownika.");
-            Console.ReadKey();
         }
 
         public void PayOnInfo(Account account)
@@ -174,7 +206,11 @@ namespace Bank
 
             var result = bankService.BringCredit(account, credit);
 
-            if (result) Console.WriteLine("Kredyt został przyznany na kwotę: " + credit + "zł.");
+            if (result)
+            {
+                Console.WriteLine("Kredyt został przyznany na kwotę: " + credit + "zł.");
+            }
+
             else Console.WriteLine("Przykro nam, kredyt nie został przyznany.");
         }
 

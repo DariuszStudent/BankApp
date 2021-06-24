@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 
 namespace Bank
 {
@@ -12,6 +13,7 @@ namespace Bank
             {
                 Console.WriteLine("Musisz podać liczbę większą od 0!");
             }
+            if (userNumber < 0) userNumber *= -1;
             return userNumber;
         }
 
@@ -22,7 +24,14 @@ namespace Bank
             {
                 Console.WriteLine("Musisz podać liczbę większą od zera!");
             }
+            if (userNumber < 0) userNumber *= -1;
             return userNumber;
+        }
+
+        public static string DateInPolish(DateTime dateTime)
+        {   
+            CultureInfo polish = new CultureInfo("pl-PL");
+            return dateTime.ToString("d MMMM yyyy", polish);
         }
     }
 }
